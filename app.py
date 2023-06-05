@@ -32,5 +32,9 @@ def run():
 
     print("Connected to InterSystems IRIS")
 
+    # Create an iris object
+    iris_obj = iris.createIRIS(connection)
+
+
 if __name__ == '__main__':
     run()
