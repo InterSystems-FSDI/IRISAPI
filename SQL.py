@@ -1,21 +1,5 @@
-import iris
+import pyodbc
 
-# Write to a test global
-def set_test_global(iris_obj: iris.IRIS) -> None: 
-    iris_obj.set(8888, "^testglobal", "1")
-    global_value = iris_obj.get("^testglobal", "1")
-    print("The value of ^testglobal(1) is {}".format(global_value) + "\n The value above should be 8888.")
-
-# Execute task based on user input
-def execute_selection(selection: int, iris_obj: iris.IRIS) -> None:
-    if selection == 1:
-        set_test_global(iris_obj)
-    elif selection == 2:
-        print("TODO: Store Person data")
-    elif selection == 3:
-        print("TODO: View Person data")
-    elif selection == 4:
-        print("TODO: Delete Person Data")
 
 # Get connection details from config file
 def get_connection_info(file_name: str) -> dict:
@@ -43,14 +27,15 @@ def run() -> None:
     namespace = connection_detail["namespace"]
     username = connection_detail["username"]
     password = connection_detail["password"]
-
-    # Create connection to InterSystems IRIS
-    connection = iris.createConnection(ip, port, namespace, username, password)
-
-    print("Connected to InterSystems IRIS")
-
-    # Create an iris object
-    iris_native = iris.createIRIS(connection)
+    driver = "{InterSystems IRIS ODBC35}"
+    
+    # Create connection to InterSystems IRIS using pyodbc
+    connection_string = 'DRIVER={};SERVER={};PORT={};DATABASE={};UID={};PWD={}' \
+    .format(driver, ip, port, namespace, username, password)
+    connection_pyodbc = pyodbc.connect(connection_string)
+    connection_pyodbc.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8')
+    connection_pyodbc.setencoding(encoding='utf-8')
+    print("Connected to InterSystems IRIS using pyodbc")
 
     # Starting interactive prompt
     while True:
@@ -65,7 +50,6 @@ def run() -> None:
         elif selection not in range(1, 6):
             print("Invalid option. Try again!")
             continue
-        execute_selection(selection, iris_native)
 
 
 if __name__ == '__main__':
