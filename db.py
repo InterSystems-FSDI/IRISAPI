@@ -50,18 +50,18 @@ def execute_selection(selection: int, iris_obj: iris.IRIS) -> None:
     if selection == 1:
         view_globals(iris_obj)
     elif selection == 2:
-        name = input()
-        phone = input()
-        age = input()
+        name = input("Name: ")
+        phone = input("Phone Number: ")
+        age = input("Age: ")
         store_global(iris_obj, ["", name, phone, age])
     elif selection == 3:
-        old_name = input()
-        name = input()
-        phone = input()
-        age = input()
+        old_name = input("Who would you like to delete?: ")
+        name = input("New Name: ")
+        phone = input("New Phone Number: ")
+        age = input("New Age: ")
         update_global(iris_obj, ["", name, phone, age], old_name)
     elif selection == 4:
-        old_name = input()
+        old_name = input("Who would you like to delete?: ")
         delete_global(iris_obj, old_name)
 
 # Get connection details from config file
@@ -110,12 +110,15 @@ def run() -> None:
         print("3. Update Person data")
         print("4. Delete Person Data")
         print("5. Quit")
-        selection = int(input("What would you like to do? "))
-        if selection == 5:
-            break
-        elif selection not in range(1, 6):
-            print("Invalid option. Try again!")
-            continue
+        try:
+            selection = int(input("What would you like to do? "))
+            if selection == 5:
+                break
+            elif selection not in range(1, 6):
+                print("Invalid option. Try again!")
+                continue
+        except Exception as e:
+            print("Error:", e)
         execute_selection(selection, iris_native)
 
 if __name__ == '__main__':
