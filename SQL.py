@@ -1,6 +1,8 @@
 import pyodbc
+import time
 
 
+    
 # Get connection details from config file
 def get_connection_info(file_name: str) -> dict:
     # Initial empty dictionary to store connection details
@@ -46,16 +48,20 @@ def create_person_table(connection: dict) -> None:
 # Add item to person
 def add_person_item(connection: dict, name: str, phone: str, age: int) -> None:
     try:
+        t = time.process_time()
         sql = "INSERT INTO Demo.Person_SQL (Name,Phone,Age) VALUES (?,?,?)"
         cursor = connection.cursor()
         cursor.execute(sql, name, phone, int(age))
         print("Added new line item for Person_SQL: {}.".format(name))
         connection.commit()
+        elapsed_time = time.process_time() - t
+        print("Time took to execute(SQL): " + str(elapsed_time))
     except Exception as e:
         print("Error adding to person: " + str(e))
         
 # Update item in person table
 def update_person_item(connection: dict, name: str, phone: str, age: int) -> None:
+    t = time.process_time()
     sql = "UPDATE Demo.Person_SQL SET Phone = ?, Age= ? WHERE Name= ?"
     cursor = connection.cursor()
     cursor.execute(sql, phone, int(age), name)
@@ -64,9 +70,12 @@ def update_person_item(connection: dict, name: str, phone: str, age: int) -> Non
     else:
         print("{} does not exist.".format(name))
     connection.commit()
+    elapsed_time = time.process_time() - t
+    print("Time took to execute(SQL): " + str(elapsed_time))
 
 # Delete item from person
 def delete_person_table(connection, name):
+    t = time.process_time()
     sql = "DELETE FROM Demo.Person_SQL WHERE name = ?"
     cursor = connection.cursor()
     cursor.execute(sql, name)
@@ -75,6 +84,8 @@ def delete_person_table(connection, name):
     else:
         print("{} does not exist.".format(name))
     connection.commit()
+    elapsed_time = time.process_time() - t
+    print("Time took to execute(SQL): " + str(elapsed_time))
 
 # Task 2: Create Person Table
 def task_create_person(connection: dict) -> None:
