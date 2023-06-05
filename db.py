@@ -1,10 +1,5 @@
 import iris
-
-# Write to a test global
-def set_test_global(iris_obj: iris.IRISObject) -> None: 
-    iris_obj.set(8888, "^testglobal", "2")
-    global_value = iris_obj.get("^testglobal", "1")
-    print("The value of ^testglobal(1) is {}".format(global_value) + "\n The value above should be 8888.")
+import time
 
 def view_globals(iris_obj: iris.IRIS) -> None:
     size = iris_obj.get("^Demo.PersonD")
@@ -14,13 +9,17 @@ def view_globals(iris_obj: iris.IRIS) -> None:
         print(list.get(2), list.get(3), list.get(4))
 
 def store_global(iris_obj: iris.IRIS, properties: list) -> None:
+    t = time.process_time()
     index = iris_obj.get("^Demo.PersonD") + 1
     list = iris.IRISList()
     for property in properties: list.add(property)
     iris_obj.set(list, "^Demo.PersonD", index)
     iris_obj.set(index, "^Demo.PersonD")
+    elapsed_time = time.process_time() - t
+    print("Time took to execute(Native): " + str(elapsed_time))
 
 def update_global(iris_obj: iris.IRIS, properties: list, name: str) -> None:
+    t = time.process_time()
     index = iris_obj.get("^Demo.PersonD") + 1
     target = -1
     for i in range(1, index):
@@ -30,8 +29,11 @@ def update_global(iris_obj: iris.IRIS, properties: list, name: str) -> None:
         list = iris.IRISList()
         for property in properties: list.add(property)
         iris_obj.set(list, "^Demo.PersonD", target)
+    elapsed_time = time.process_time() - t
+    print("Time took to execute(Native): " + str(elapsed_time))
 
 def delete_global(iris_obj: iris.IRIS, name: str) -> None:
+    t = time.process_time()
     index = iris_obj.get("^Demo.PersonD") + 1
     target = -1
     for i in range(1, index):
@@ -40,6 +42,8 @@ def delete_global(iris_obj: iris.IRIS, name: str) -> None:
     if target != -1:
         iris_obj.kill("^Demo.PersonD", target)
         iris_obj.set(index - 2, "^Demo.PersonD")
+    elapsed_time = time.process_time() - t
+    print("Time took to execute(Native): " + str(elapsed_time))
 
 # Execute task based on user input
 def execute_selection(selection: int, iris_obj: iris.IRIS) -> None:
