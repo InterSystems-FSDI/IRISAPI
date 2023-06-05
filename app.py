@@ -1,5 +1,5 @@
-import irisnative
 import iris
+
 # Get connection details from config file
 def get_connection_info(file_name):
     # Initial empty dictionary to store connection details
@@ -17,7 +17,6 @@ def get_connection_info(file_name):
             connections[connection_param] = connection_value
     return connections
 
-
 def run():
     # Retrieve connection information from configuration file
     connection_detail = get_connection_info("connection.config")
@@ -29,7 +28,7 @@ def run():
     password = connection_detail["password"]
 
     # Create connection to InterSystems IRIS
-    connection = iris.createConnection(ip, port, namespace, username, password)
+    connection = iris.connect(ip, port, namespace, username, password)
 
     print("Connected to InterSystems IRIS")
 
