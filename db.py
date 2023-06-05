@@ -6,25 +6,59 @@ def set_test_global(iris_obj: iris.IRISObject) -> None:
     global_value = iris_obj.get("^testglobal", "1")
     print("The value of ^testglobal(1) is {}".format(global_value) + "\n The value above should be 8888.")
 
-def store_global(iris_obj: iris.IRIS) -> None:
-    pass
+def view_globals(iris_obj: iris.IRIS) -> None:
+    size = iris_obj.get("^Demo.PersonD")
+    for i in range(size):
+        globalBytes = iris_obj.getBytes("^Demo.PersonD", i + 1)
+        list = iris.IRISList(globalBytes)
+        print(list.get(2), list.get(3), list.get(4))
 
-def view_global():
-    pass
+def store_global(iris_obj: iris.IRIS, properties: list) -> None:
+    index = iris_obj.get("^Demo.PersonD") + 1
+    list = iris.IRISList()
+    for property in properties: list.add(property)
+    iris_obj.set(list, "^Demo.PersonD", index)
+    iris_obj.set(index, "^Demo.PersonD")
 
-def delete_global():
-    pass
+def update_global(iris_obj: iris.IRIS, properties: list, name: str) -> None:
+    index = iris_obj.get("^Demo.PersonD") + 1
+    target = -1
+    for i in range(1, index):
+        n = iris.IRISList(iris_obj.getBytes("^Demo.PersonD", i)).get(2)
+        if n == name: target = i
+    if target != -1:
+        list = iris.IRISList()
+        for property in properties: list.add(property)
+        iris_obj.set(list, "^Demo.PersonD", target)
+
+def delete_global(iris_obj: iris.IRIS, name: str) -> None:
+    index = iris_obj.get("^Demo.PersonD") + 1
+    target = -1
+    for i in range(1, index):
+        n = iris.IRISList(iris_obj.getBytes("^Demo.PersonD", i)).get(2)
+        if n == name: target = i
+    if target != -1:
+        iris_obj.kill("^Demo.PersonD", target)
+        iris_obj.set(index - 2, "^Demo.PersonD")
 
 # Execute task based on user input
 def execute_selection(selection: int, iris_obj: iris.IRIS) -> None:
     if selection == 1:
-        set_test_global(iris_obj)
+        view_globals(iris_obj)
     elif selection == 2:
-        print("TODO: Store Person data")
+        name = input()
+        phone = input()
+        age = input()
+        store_global(iris_obj, ["", name, phone, age])
     elif selection == 3:
-        print("TODO: View Person data")
+        old_name = input()
+        name = input()
+        phone = input()
+        age = input()
+        update_global(iris_obj, ["", name, phone, age], old_name)
     elif selection == 4:
-        print("TODO: Delete Person Data")
+        old_name = input()
+        delete_global(iris_obj, old_name)
 
 # Get connection details from config file
 def get_connection_info(file_name: str) -> dict:
@@ -61,13 +95,15 @@ def run() -> None:
     # Create an iris object
     iris_native = iris.createIRIS(connection)
 
+    # Populate person global with data
+    iris_native.kill("Demo.PersonD")
     iris_native.classMethodValue("Demo.Person", "Populate")
 
     # Starting interactive prompt
     while True:
-        print("1. Test")
+        print("1. View data")
         print("2. Store Person data")
-        print("3. View Person data")
+        print("3. Update Person data")
         print("4. Delete Person Data")
         print("5. Quit")
         selection = int(input("What would you like to do? "))

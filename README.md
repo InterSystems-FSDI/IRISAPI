@@ -3,7 +3,7 @@ Mini Project for IRIS API
 
 - add, update, and delete from Demo.Person 
 
-## PYODBC (SQL)
+## NATIVE API
 1. Install InterSystems IRIS Native API for Python, following the directions below for your operating system. Note that InterSystems Learning Labs, AWS, GCP, and Azure all use Linux.
 
 - Windows: 
@@ -19,6 +19,7 @@ Mini Project for IRIS API
     ```
     pip install nativeAPI_wheel/irisnative-1.0.0-cp34-abi3-linux_x86_64.whl
     ```
+## PYODBC (SQL)
 2. Install InterSystems IRIS PyODBC drive
 - Windows: 
   ```
