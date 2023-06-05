@@ -1,10 +1,19 @@
 import iris
 
 # Write to a test global
-def set_test_global(iris_obj: iris.IRIS) -> None: 
-    iris_obj.set(8888, "^testglobal", "1")
+def set_test_global(iris_obj: iris.IRISObject) -> None: 
+    iris_obj.set(8888, "^testglobal", "2")
     global_value = iris_obj.get("^testglobal", "1")
     print("The value of ^testglobal(1) is {}".format(global_value) + "\n The value above should be 8888.")
+
+def store_global(iris_obj: iris.IRIS) -> None:
+    pass
+
+def view_global():
+    pass
+
+def delete_global():
+    pass
 
 # Execute task based on user input
 def execute_selection(selection: int, iris_obj: iris.IRIS) -> None:
@@ -52,6 +61,8 @@ def run() -> None:
     # Create an iris object
     iris_native = iris.createIRIS(connection)
 
+    iris_native.classMethodValue("Demo.Person", "Populate")
+
     # Starting interactive prompt
     while True:
         print("1. Test")
@@ -66,7 +77,6 @@ def run() -> None:
             print("Invalid option. Try again!")
             continue
         execute_selection(selection, iris_native)
-
 
 if __name__ == '__main__':
     run()
