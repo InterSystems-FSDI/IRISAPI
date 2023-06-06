@@ -59,7 +59,7 @@ def execute_selection(selection: int, iris_obj: iris.IRIS) -> None:
         age = input("Age: ")
         store_global(iris_obj, ["", name, phone, age])
     elif selection == 3:
-        old_name = input("Who would you like to delete?: ")
+        old_name = input("Who would you like to update?: ")
         name = input("New Name: ")
         phone = input("New Phone Number: ")
         age = input("New Age: ")
